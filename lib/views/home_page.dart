@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:todo_app/services/create_data_base.dart';
+import 'package:todo_app/services/insert.dart';
+
 import 'package:todo_app/widgets/archived_body.dart';
 import 'package:todo_app/widgets/done_body.dart';
 import 'package:todo_app/widgets/taske_body.dart';
@@ -18,9 +22,16 @@ List<Widget> bodyList = [
 ];
 
 List<String> titleTextList = ['Task Page', 'Done Page', 'Archived Page'];
+late Database database;
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    createDataBase();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +43,9 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
-        onPressed: () {},
+        onPressed: () {
+          inserData();
+        },
         child: const Icon(
           Icons.add,
           color: Colors.white,
@@ -65,5 +78,41 @@ class _HomePageState extends State<HomePage> {
       ),
       body: bodyList[currentIndex],
     );
+  }
+
+  void createDataBase() async {
+    database = await openDatabase(
+      'todoo.db',
+      version: 1,
+      onCreate: (database, version) {
+        print('data base created');
+        // When creating the db, create the table
+        database
+            .execute(
+                'CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT,status TEXT)')
+            .then((value) {
+          print('table created');
+        }).catchError((err) {
+          print('error when create table ${err.toString()}');
+        });
+      },
+      onOpen: (database) {
+        print('dataBase opened');
+      },
+    );
+  }
+
+  void inserData() async {
+    await database.transaction((txn) async {
+      await txn
+          .rawInsert(
+              'INSERT INTO tasks(title, date, time, status) VALUES("first task", "2022","5.00", "new")')
+          .then((value) {
+        print('$value inserted successfully');
+      }).catchError((err) {
+        print('error of insert ${err}');
+      });
+      return null;
+    });
   }
 }
