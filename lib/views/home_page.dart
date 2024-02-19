@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_app/services/create_data_base.dart';
 import 'package:todo_app/services/insert.dart';
-
 import 'package:todo_app/widgets/archived_body.dart';
+import 'package:todo_app/widgets/costum_bottom_navigation_bar.dart';
 import 'package:todo_app/widgets/done_body.dart';
 import 'package:todo_app/widgets/taske_body.dart';
 
@@ -51,68 +51,14 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.menu,
-              ),
-              label: 'Tasks'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.done,
-              ),
-              label: 'Done'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.archive,
-              ),
-              label: 'Archived'),
-        ],
-        currentIndex: currentIndex,
-        onTap: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-        },
-      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+          onTap: (value) {
+            setState(() {
+              currentIndex = value;
+            });
+          },
+          currentIndex: currentIndex),
       body: bodyList[currentIndex],
     );
-  }
-
-  void createDataBase() async {
-    database = await openDatabase(
-      'todoo.db',
-      version: 1,
-      onCreate: (database, version) {
-        print('data base created');
-        // When creating the db, create the table
-        database
-            .execute(
-                'CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT,status TEXT)')
-            .then((value) {
-          print('table created');
-        }).catchError((err) {
-          print('error when create table ${err.toString()}');
-        });
-      },
-      onOpen: (database) {
-        print('dataBase opened');
-      },
-    );
-  }
-
-  void inserData() async {
-    await database.transaction((txn) async {
-      await txn
-          .rawInsert(
-              'INSERT INTO tasks(title, date, time, status) VALUES("first task", "2022","5.00", "new")')
-          .then((value) {
-        print('$value inserted successfully');
-      }).catchError((err) {
-        print('error of insert ${err}');
-      });
-      return null;
-    });
   }
 }
