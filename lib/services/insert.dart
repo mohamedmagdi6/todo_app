@@ -1,10 +1,11 @@
 import 'package:todo_app/views/home_page.dart';
 
-void inserData() async {
+void inserData(
+    {required String title, required String date, required String time}) async {
   await database.transaction((txn) async {
     await txn
         .rawInsert(
-            'INSERT INTO tasks(title, date, time, status) VALUES("first task", "2022","5.00", "new")')
+            'INSERT INTO tasks(title, date, time, status) VALUES("$title", "$date","$time", "new")')
         .then((value) {
       print('$value inserted successfully');
     }).catchError((err) {

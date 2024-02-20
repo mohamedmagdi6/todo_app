@@ -53,6 +53,10 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           if (changeBottomSheetState) {
             if (formKey.currentState!.validate()) {
+              inserData(
+                  title: titleController.text,
+                  date: dateController.text,
+                  time: timeController.text);
               Navigator.pop(context);
               changeBottomSheetState = false;
               setState(() {
@@ -61,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             }
           } else {
             scaffoldKey.currentState!
-                .showBottomSheet((context) => customBottomSheet());
+                .showBottomSheet((context) => const customBottomSheet());
             changeBottomSheetState = true;
             setState(() {
               fapIcon = Icons.add;

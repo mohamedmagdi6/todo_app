@@ -10,6 +10,10 @@ class customBottomSheet extends StatefulWidget {
   State<customBottomSheet> createState() => _customBottomSheetState();
 }
 
+var titleController = TextEditingController();
+var timeController = TextEditingController();
+var dateController = TextEditingController();
+
 final formKey = GlobalKey<FormState>();
 
 class _customBottomSheetState extends State<customBottomSheet> {
@@ -24,31 +28,37 @@ class _customBottomSheetState extends State<customBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomTextFormField(
+              controller: titleController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'this field is required';
                 }
               },
+              onFieldSubmitted: (value) {},
               prefixIcon: Icons.title,
               hintText: 'Task Title',
             ),
             const SizedBox(height: 16),
             CustomTextFormField(
+              controller: timeController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'this field is required';
                 }
               },
+              onFieldSubmitted: (value) {},
               prefixIcon: Icons.timelapse,
               hintText: 'Task Time',
             ),
             const SizedBox(height: 16),
             CustomTextFormField(
+              controller: dateController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'this field is required';
                 }
               },
+              onFieldSubmitted: (value) {},
               prefixIcon: Icons.date_range,
               hintText: 'Task Date',
             ),
