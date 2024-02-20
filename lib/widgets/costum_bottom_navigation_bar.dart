@@ -32,9 +32,3 @@ class CustomBottomNavigationBar extends StatelessWidget {
     );
   }
 }
-
-// (value) {
-//           setState(() {
-//             currentIndex = value;
-//           });
-// }

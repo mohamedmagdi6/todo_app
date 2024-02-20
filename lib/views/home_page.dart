@@ -4,6 +4,7 @@ import 'package:todo_app/services/create_data_base.dart';
 import 'package:todo_app/services/insert.dart';
 import 'package:todo_app/widgets/archived_body.dart';
 import 'package:todo_app/widgets/costum_bottom_navigation_bar.dart';
+import 'package:todo_app/widgets/custom_bottom_sheet.dart';
 import 'package:todo_app/widgets/done_body.dart';
 import 'package:todo_app/widgets/taske_body.dart';
 
@@ -22,7 +23,12 @@ List<Widget> bodyList = [
 ];
 
 List<String> titleTextList = ['Task Page', 'Done Page', 'Archived Page'];
+
 late Database database;
+var scaffoldKey = GlobalKey<ScaffoldState>();
+
+bool changeBottomSheetState = false;
+IconData fapIcon = Icons.edit;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -34,6 +40,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(
           titleTextList[currentIndex],
@@ -44,10 +51,25 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
-          inserData();
+          if (changeBottomSheetState) {
+            if (formKey.currentState!.validate()) {
+              Navigator.pop(context);
+              changeBottomSheetState = false;
+              setState(() {
+                fapIcon = Icons.edit;
+              });
+            }
+          } else {
+            scaffoldKey.currentState!
+                .showBottomSheet((context) => customBottomSheet());
+            changeBottomSheetState = true;
+            setState(() {
+              fapIcon = Icons.add;
+            });
+          }
         },
-        child: const Icon(
-          Icons.add,
+        child: Icon(
+          fapIcon,
           color: Colors.white,
         ),
       ),
